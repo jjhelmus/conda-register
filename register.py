@@ -1,7 +1,3 @@
-# TODO
-# * find all un-tracked dists
-# * proper CLI
-
 import os.path
 
 try:
@@ -12,6 +8,7 @@ except:
 from conda.models.prefix_record import PrefixRecord
 from conda.core.link import UnlinkLinkTransaction
 from conda.common.path import get_python_site_packages_short_path
+from conda.egg_info import get_egg_info
 try:
     from conda.core.prefix_data import PrefixData
 except:
@@ -19,6 +16,13 @@ except:
 
 DEFAULT_BUILD_NUMBER = 0
 DEFAULT_BUILD_STR = 'frompip_0'
+
+
+def find_all_unregistered_dists(target_prefix):
+    """ Return a list of the canonical name of all unregistered dists. """
+    dists = get_egg_info(target_prefix, all_pkgs=False)
+    dist_names = [dist.name for dist in dists]
+    return dist_names
 
 
 def register_dist(dist_name, target_prefix):
@@ -53,8 +57,16 @@ def register_dist(dist_name, target_prefix):
     PrefixData(target_prefix).insert(prefix_record)
 
 
+
+
 if __name__ == "__main__":
-    # TODO set these from the command line
-    dist_name = 'imagesize'
+    # TODO
+    # * CLI
+    # conda register
+    # [-h] [-n ENVIRONMENT | -p PATH] [--all] [--list] [dist1 ...]
     target_prefix = '/home/jhelmus/anaconda3/envs/pip_test'
+    dist_names = find_all_unregistered_dists(target_prefix)
+    print(dist_names)
+
+    dist_name = 'imagesize'
     register_dist(dist_name, target_prefix)
