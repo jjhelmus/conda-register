@@ -57,8 +57,6 @@ def register_dist(dist_name, target_prefix):
     PrefixData(target_prefix).insert(prefix_record)
 
 
-
-
 if __name__ == "__main__":
     # TODO
     # * CLI
